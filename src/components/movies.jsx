@@ -6,7 +6,12 @@ class Movies extends Component {
     //not the right way to initialize state properties
     movies: getMovies()
   };
-  handleDelete = movies => {};
+  handleDelete = movie => {
+    // Include all movies in a new array except the movie object being passed for deletion
+    const movies = this.state.movies.filter(m => m._id !== movie._id);
+    // Overwrite the properties of state movies object with the new array
+    this.setState({ movies }); //movies: movies
+  };
   render() {
     return (
       <table className="table">
@@ -16,6 +21,7 @@ class Movies extends Component {
             <th>Genre</th>
             <th>Stock</th>
             <th>Rate</th>
+            <th />
           </tr>
         </thead>
         <tbody>
@@ -25,6 +31,14 @@ class Movies extends Component {
               <td>{movie.genre.name}</td>
               <td>{movie.numberInStock}</td>
               <td>{movie.dailyRentalRate}</td>
+              <td>
+                <button
+                  onClick={() => this.handleDelete(movie)}
+                  className="btn btn-danger btn-sm"
+                >
+                  Delete
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>
