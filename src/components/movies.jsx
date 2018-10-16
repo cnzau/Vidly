@@ -1,17 +1,33 @@
 import React, { Component } from "react";
 import { getMovies } from "../services/fakeMovieService";
+import Like from "./common/like";
 
 class Movies extends Component {
   state = {
     //not the right way to initialize state properties
     movies: getMovies()
   };
+
   handleDelete = movie => {
     // Include all movies in a new array except the movie object being passed for deletion
     const movies = this.state.movies.filter(m => m._id !== movie._id);
     // Overwrite the properties of state movies object with the new array
     this.setState({ movies }); //movies: movies
   };
+
+  handleLike = movie => {
+    // Create a clone of all movies
+    const movies = [...this.state.movies];
+    // Find index of the passed movie object
+    const index = movies.indexOf(movie);
+    // Clone the movie object
+    movies[index] = { ...movies[index] };
+    // Change/toggle the like
+    movies[index].liked = !movies[index].liked;
+    // set state passing the new movies array
+    this.setState({ movies });
+  };
+
   render() {
     const { length: count } = this.state.movies;
     if (count === 0) return <p>There are no movies in the database.</p>;
@@ -26,6 +42,7 @@ class Movies extends Component {
               <th>Stock</th>
               <th>Rate</th>
               <th />
+              <th />
             </tr>
           </thead>
           <tbody>
@@ -35,6 +52,12 @@ class Movies extends Component {
                 <td>{movie.genre.name}</td>
                 <td>{movie.numberInStock}</td>
                 <td>{movie.dailyRentalRate}</td>
+                <td>
+                  <Like
+                    liked={movie.liked}
+                    onClick={() => this.handleLike(movie)}
+                  />
+                </td>
                 <td>
                   <button
                     onClick={() => this.handleDelete(movie)}
