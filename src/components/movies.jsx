@@ -6,7 +6,8 @@ class Movies extends Component {
   state = {
     //not the right way to initialize state properties
     movies: getMovies(),
-    pageSize: 4
+    pageSize: 4,
+    currentPage: 1
   };
 
   handleDelete = movie => {
@@ -30,12 +31,14 @@ class Movies extends Component {
   };
 
   handlePageChange = page => {
-    console.log("Page");
+    console.log(`Clicked page: ${page}`);
+    this.setState({ currentPage: page });
   };
 
   render() {
     // Destructure this.state.movies.length to count
     const { length: count } = this.state.movies;
+    const { pageSize, currentPage } = this.state;
     if (count === 0) return <p>There are no movies in the database.</p>;
     return (
       <React.Fragment>
@@ -79,7 +82,8 @@ class Movies extends Component {
         {/* We had destructured this.state.movies.length to count */}
         <Pagination
           itemsCount={count}
-          pageSize={this.state.pageSize}
+          pageSize={pageSize}
+          currentPage={currentPage}
           onPageChange={this.handlePageChange}
         />
       </React.Fragment>
