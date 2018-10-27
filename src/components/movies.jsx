@@ -86,7 +86,7 @@ class Movies extends Component {
         </table>
         {/* We had destructured this.state.movies.length to count */}
         <Pagination
-          itemsCount={count}
+          itemsCount={"count"}
           pageSize={pageSize}
           currentPage={currentPage}
           onPageChange={this.handlePageChange}
