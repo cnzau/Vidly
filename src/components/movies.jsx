@@ -79,7 +79,7 @@ class Movies extends Component {
         {/* We had destructured this.state.movies.length to count */}
         <Pagination
           itemsCount={count}
-          pageSize={this.state.pagesize}
+          pageSize={this.state.pageSize}
           onPageChange={this.handlePageChange}
         />
       </React.Fragment>
