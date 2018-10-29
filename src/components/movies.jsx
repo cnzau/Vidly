@@ -17,7 +17,6 @@ class Movies extends Component {
   // This will be called when an instatnce of this component is rendered in the DOM
   componentDidMount() {
     this.setState({ movies: getMovies(), genres: getGenres() });
-    console.log(getGenres());
   }
 
   handleDelete = movie => {
@@ -60,9 +59,11 @@ class Movies extends Component {
 
     return (
       <div className="row">
-        <div className="col-2">
+        <div className="col-3">
           <ListGroup
             items={this.state.genres}
+            textProperty="name"
+            valueProperty="_id"
             onItemSelect={this.handleGenreSelect}
           />
         </div>
