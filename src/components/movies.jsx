@@ -16,8 +16,8 @@ class Movies extends Component {
   };
   // This will be called when an instatnce of this component is rendered in the DOM
   componentDidMount() {
-    // Include all genres with spread operator
-    const genres = [{ name: "All Genres" }, ...getGenres()];
+    // Include all genres with spread operator have _id so as not to have key warnings errors
+    const genres = [{ _id: "", name: "All Genres" }, ...getGenres()];
     this.setState({ movies: getMovies(), genres });
   }
 
