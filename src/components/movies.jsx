@@ -5,6 +5,7 @@ import { getMovies } from "../services/fakeMovieService";
 import { getGenres } from "../services/fakeGenreService";
 import { paginate } from "../utils/paginate";
 import MoviesTable from "./moviesTable";
+import _ from "lodash"; // used in sorting
 class Movies extends Component {
   state = {
     // Recommended way is to initialize state properties to empty array
@@ -12,7 +13,8 @@ class Movies extends Component {
     movies: [],
     genres: [],
     pageSize: 4,
-    currentPage: 1
+    currentPage: 1,
+    sortColumn: { path: "title", order: "asc" }
   };
   // This will be called when an instatnce of this component is rendered in the DOM
   componentDidMount() {
@@ -54,6 +56,18 @@ class Movies extends Component {
   // Path to the target property
   handleSort = path => {
     console.log(path);
+    // clone existing sortColumn
+    const sortColumn = { ...this.state.sortColumn };
+    // if sort is applied and path is same reverse/change sortorder else set path
+    if (sortColumn.path === path)
+      // reverse sort
+      sortColumn.order = sortColumn.order === "asc" ? "desc" : "asc";
+    else {
+      sortColumn.path = path;
+      sortColumn.order = "asc";
+    }
+    // update state
+    this.setState({ sortColumn });
   };
 
   render() {
@@ -63,6 +77,7 @@ class Movies extends Component {
     const {
       pageSize,
       currentPage,
+      sortColumn,
       selectedGenre,
       movies: allMovies
     } = this.state;
@@ -73,7 +88,10 @@ class Movies extends Component {
         ? allMovies.filter(m => m.genre._id === selectedGenre._id)
         : allMovies;
 
-    const movies = paginate(filtered, currentPage, pageSize);
+    // orderBy(input, array_of_property_names, sort_order)
+    const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order]);
+
+    const movies = paginate(sorted, currentPage, pageSize);
 
     return (
       <div className="row">
