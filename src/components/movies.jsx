@@ -53,19 +53,8 @@ class Movies extends Component {
     this.setState({ selectedGenre: genre, currentPage: 1 });
   };
 
-  // Path to the target property
-  handleSort = path => {
-    console.log(path);
-    // clone existing sortColumn
-    const sortColumn = { ...this.state.sortColumn };
-    // if sort is applied and path is same reverse/change sortorder else set path
-    if (sortColumn.path === path)
-      // reverse sort
-      sortColumn.order = sortColumn.order === "asc" ? "desc" : "asc";
-    else {
-      sortColumn.path = path;
-      sortColumn.order = "asc";
-    }
+  // takes sortColumn obj
+  handleSort = sortColumn => {
     // update state
     this.setState({ sortColumn });
   };
@@ -106,6 +95,8 @@ class Movies extends Component {
           <p>Showing {filtered.length} movies in the database.</p>
           <MoviesTable
             movies={movies}
+            // raiseSort method expects obj to be pased via props
+            sortColumn={sortColumn}
             onLike={this.handleLike}
             onDelete={this.handleDelete}
             onSort={this.handleSort}
