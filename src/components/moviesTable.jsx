@@ -11,12 +11,30 @@ class MoviesTable extends Component {
     { path: "numberInStock", label: "Stock" },
     { path: "dailyRentalRate", label: "Rate" },
     // empty columns... set key to avoid warning errors
-    { key: "like" },
-    { key: "delete" }
+    {
+      key: "like",
+      // have content property with a fuction that takes a movie obj & returns react element
+      content: movie => (
+        // jsx expression which compiles to react element which are plain js obj
+        <Like liked={movie.liked} onClick={() => this.props.onLike(movie)} />
+      )
+    },
+    {
+      key: "delete",
+      // have content property with a fuction that takes a movie obj & returns react element
+      content: movie => (
+        <button
+          onClick={() => this.props.onDelete(movie)}
+          className="btn btn-danger btn-sm"
+        >
+          Delete
+        </button>
+      )
+    }
   ];
 
   render() {
-    const { movies, onDelete, onLike, sortColumn, onSort } = this.props;
+    const { movies, sortColumn, onSort } = this.props;
 
     return (
       <table className="table">
@@ -26,27 +44,6 @@ class MoviesTable extends Component {
           onSort={onSort}
         />
         <TableBody columns={this.columns} data={movies} />
-        <tbody>
-          {movies.map(movie => (
-            <tr key={movie._id}>
-              <td>{movie.title}</td>
-              <td>{movie.genre.name}</td>
-              <td>{movie.numberInStock}</td>
-              <td>{movie.dailyRentalRate}</td>
-              <td>
-                <Like liked={movie.liked} onClick={() => onLike(movie)} />
-              </td>
-              <td>
-                <button
-                  onClick={() => onDelete(movie)}
-                  className="btn btn-danger btn-sm"
-                >
-                  Delete
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
       </table>
     );
   }
