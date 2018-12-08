@@ -2,8 +2,8 @@ import React from "react";
 import PropTypes from "prop-types";
 import _ from "lodash";
 
-const Pagination = props => {
-  const { itemsCount, pageSize, currentPage, onPageChange } = props;
+// Destructure props args of a function
+const Pagination = ({ itemsCount, pageSize, currentPage, onPageChange }) => {
   console.log(`Current page from Pagination: ${currentPage}`);
   // Calculate the number of pages then use Math.ceil to have an integer
   const pagesCount = Math.ceil(itemsCount / pageSize);
