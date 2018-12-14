@@ -1,21 +1,23 @@
 import React, { Component } from "react";
 
 class LoginForm extends Component {
-  username = React.createRef();
-
-  componentDidMount() {
-    this.username.current.focus();
-  }
+  state = {
+    account: { username: "", password: "" }
+  };
 
   handleSubmit = e => {
     e.preventDefault();
 
     // Call the server and save changes then redirect user
-
-    // const username = document.getElementById('username').value;
-    const username = this.username.current.value;
     console.log("Submited");
   };
+
+  handleChange = e => {
+    const account = { ...this.state.account };
+    account.username = e.currentTarget.value;
+    this.setState({ account });
+  };
+
   render() {
     return (
       <div>
@@ -23,9 +25,10 @@ class LoginForm extends Component {
         <form onSubmit={this.handleSubmit}>
           <div className="form-group">
             <label htmlFor="username">Username</label>
+            {/* input field have their own state, so turn the element to controlled element by setting value attributes */}
             <input
-              //   autoFocus
-              ref={this.username}
+              value={this.state.account.username}
+              onChange={this.handleChange}
               id="username"
               type="text"
               className="form-control"
