@@ -2,6 +2,7 @@ import React, { Component } from "react";
 
 class LoginForm extends Component {
   state = {
+    // NOTE: Use empty strings cannot be null or undefined since it is controlled in input field
     account: { username: "", password: "" }
   };
 
