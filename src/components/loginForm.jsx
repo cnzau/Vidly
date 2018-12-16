@@ -4,11 +4,25 @@ import Input from "./common/input";
 class LoginForm extends Component {
   state = {
     // NOTE: Use empty strings cannot be null or undefined since it is controlled in input field
-    account: { username: "", password: "" }
+    account: { username: "", password: "" },
+    // property with all errors initially set to empty obj
+    // if there will be errors we add properties to the empty obj
+    // properties map to the name of input fileds (username: 'Username is required.')
+    // using obj instead of array to easily find error for a given input field (errors['username'];)
+    //  if we used array we would find errors with (errors.find(e => e.name === 'username');)
+    errors: {}
+  };
+
+  validate = () => {
+    return { username: "Username is required." };
   };
 
   handleSubmit = e => {
     e.preventDefault();
+
+    const errors = this.validate();
+    this.setState({ errors });
+    if (errors) return;
 
     // Call the server and save changes then redirect user
     console.log("Submited");
