@@ -31,7 +31,8 @@ class LoginForm extends Component {
 
     const errors = this.validate();
     console.log(errors);
-    this.setState({ errors });
+    // set errors if errors obj is truefy else set to an empty obj. NOTE:Can't be null
+    this.setState({ errors: errors || {} });
     if (errors) return;
 
     // Call the server and save changes then redirect user
@@ -54,7 +55,7 @@ class LoginForm extends Component {
   };
 
   render() {
-    const { account } = this.state;
+    const { account, errors } = this.state;
 
     return (
       <div>
@@ -65,6 +66,7 @@ class LoginForm extends Component {
             value={account.username}
             label="Username"
             onChange={this.handleChange}
+            error={errors.username}
           />
           <Input
             name="password"
@@ -72,6 +74,7 @@ class LoginForm extends Component {
             label="Password"
             onChange={this.handleChange}
             type="password"
+            error={errors.password}
           />
           <button className="btn btn-primary">Login</button>
         </form>
