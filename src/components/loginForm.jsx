@@ -39,6 +39,18 @@ class LoginForm extends Component {
     console.log("Submited");
   };
 
+  // validation for every input
+  validateProperty = ({ name, value }) => {
+    if (name === "username") {
+      if (value.trim() === "") return "Username is required.";
+      // ...
+    }
+    if (name === "password") {
+      if (value.trim() === "") return "Password is required.";
+      // ...
+    }
+  };
+
   //   handleChange = e => {
   //     const account = { ...this.state.account };
   //     account[e.currentTarget.name] = e.currentTarget.value;
@@ -47,11 +59,20 @@ class LoginForm extends Component {
   // we can distructure the e.currentTarget and rename to input
 
   handleChange = ({ currentTarget: input }) => {
+    // clone current state of errors
+    const errors = { ...this.state.errors };
+    // validation for an input onChange
+    const errorMessage = this.validateProperty(input);
+    // set or delete error message of an input to cloned errors
+    if (errorMessage) errors[input.name] = errorMessage;
+    else delete errors[input.name];
+
     const account = { ...this.state.account };
     // To work with properties of an obj dynamically we use bracket instead of dot notation
     // For multiple iputs give each input a name attr then read them dynamically with e.c...name
     account[input.name] = input.value;
-    this.setState({ account });
+    // set errors state too
+    this.setState({ account, errors });
   };
 
   render() {
