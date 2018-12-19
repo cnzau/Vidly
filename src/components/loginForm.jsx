@@ -16,27 +16,26 @@ class LoginForm extends Component {
 
   // scheme for joi not part of state since it will not be changing
   schema = {
-    username: Joi.string().required(),
-    password: Joi.string().required()
+    username: Joi.string()
+      .required()
+      .label("Username"),
+    password: Joi.string()
+      .required()
+      .label("Password")
   };
 
   validate = () => {
     // Joi.validate(obj_to_be_validated, schema, prevent_abort_on_1st_error)
-    const result = Joi.validate(this.state.account, this.schema, {
-      abortEarly: false
-    });
-    console.log(result);
-
+    const options = { abortEarly: false };
+    const { error } = Joi.validate(this.state.account, this.schema, options);
+    // if falsey
+    if (!error) return null;
+    // else get error.details array and map it into an obj
     const errors = {};
-
-    const { account } = this.state;
-    if (account.username.trim() === "")
-      errors.username = "Username is required.";
-    if (account.password.trim() === "")
-      errors.password = "Password is required.";
-
-    // Obj.keys(errors) returns an array of all the keys in the errors obj passed
-    return Object.keys(errors).length === 0 ? null : errors;
+    // itterate over the array and for each error msg we dd a new property to errors obj
+    // interested in message and path properties in each array
+    for (let item of error.details) errors[item.path[0]] = item.message;
+    return errors;
   };
 
   handleSubmit = e => {
