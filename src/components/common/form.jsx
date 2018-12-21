@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Joi from "joi-browser";
+import Input from "./input";
 
 class Form extends Component {
   state = {
@@ -61,7 +62,30 @@ class Form extends Component {
     this.setState({ data, errors });
   };
 
-  //   No render method since form component is not supposed to render anything
+  // Extract helper rendering methods
+  renderButton(label) {
+    return (
+      <button disabled={this.validate()} className="btn btn-primary">
+        {label}
+      </button>
+    );
+  }
+
+  renderInput(name, label, type = "text") {
+    const { data, errors } = this.state;
+
+    return (
+      <Input
+        name={name}
+        label={label}
+        error={errors[name]}
+        type={type}
+        // input field have their own state, so turn the element to controlled one by setting the value attribute(bind)
+        value={data[name]}
+        onChange={this.handleChange}
+      />
+    );
+  }
 }
 
 export default Form;
