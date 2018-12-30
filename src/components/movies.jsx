@@ -7,6 +7,8 @@ import { getGenres } from "../services/fakeGenreService";
 import { paginate } from "../utils/paginate";
 import MoviesTable from "./moviesTable";
 import _ from "lodash"; // used in sorting
+import SearchBox from "./searchBox";
+
 class Movies extends Component {
   state = {
     // Recommended way is to initialize state properties to empty array
@@ -14,6 +16,8 @@ class Movies extends Component {
     movies: [],
     genres: [],
     pageSize: 4,
+    searchQuery: "",
+    selectedGenre: null,
     currentPage: 1,
     sortColumn: { path: "title", order: "asc" }
   };
@@ -51,7 +55,12 @@ class Movies extends Component {
 
   handleGenreSelect = genre => {
     console.log(genre);
-    this.setState({ selectedGenre: genre, currentPage: 1 });
+    // searchquery used in controlled component... cannoot be null hence ""
+    this.setState({ selectedGenre: genre, searchQuery: "", currentPage: 1 });
+  };
+
+  handleSearch = query => {
+    this.setState({ searchQuery: query, selectedGenre: null, currentPage: 1 });
   };
 
   // takes sortColumn obj
@@ -67,14 +76,19 @@ class Movies extends Component {
       currentPage,
       sortColumn,
       selectedGenre,
+      searchQuery,
       movies: allMovies // Rename movies to allMovies
     } = this.state;
 
     // Determine list of movies to display
-    const filtered =
-      selectedGenre && selectedGenre._id
-        ? allMovies.filter(m => m.genre._id === selectedGenre._id)
-        : allMovies;
+    let filtered = allMovies;
+    if (searchQuery)
+      filtered = allMovies.filter(
+        // m => m.title.toLowerCase().indexOf(searchQuery.toLowerCase()) > -1
+        m => m.title.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    else if (selectedGenre && selectedGenre._id)
+      filtered = allMovies.filter(m => m.genre._id === selectedGenre._id);
 
     //   orderBy(input, array_of_property_names, sort_order)
     const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order]);
@@ -88,7 +102,7 @@ class Movies extends Component {
     // Destructure this.state.movies.length to count
     const { length: count } = this.state.movies;
 
-    const { pageSize, currentPage, sortColumn } = this.state;
+    const { pageSize, currentPage, sortColumn, searchQuery } = this.state;
 
     if (count === 0) return <p>There are no movies in the database.</p>;
     // Rename data to movies
@@ -108,6 +122,7 @@ class Movies extends Component {
             New Movie
           </Link>
           <p>Showing {totalCount} movies in the database.</p>
+          <SearchBox value={searchQuery} onChange={this.handleSearch} />
           <MoviesTable
             movies={movies}
             // raiseSort method expects obj to be pased via props
